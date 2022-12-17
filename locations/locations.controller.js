@@ -3,11 +3,14 @@
 
 const router = require('express').Router()
 const locationsService = require('./locations.service')
+const passport = require('passport')
 
 router.get('/Hello-World', (req, res) => {
 	return res.status(200).send("Hello World")
 })
 
+router.use("/locations",passport.authenticate('jwt',{session:false}))
+router.use('/locations/:id', passport.authenticate('jwt', { session: false }));
 
 router.route("/locations")
 	.get(async(req,res)=>getAllLoc(req,res))

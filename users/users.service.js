@@ -28,21 +28,13 @@ async function deleteUser(id){
 module.exports.deleteUser = deleteUser
 
 
-async function register(req,res){
-    try{
-        const user = req.body
+async function register(user){
+    const testExist = await User.find({ username: user.username });
+    if (testExist) {
+        throw new Error('User already exists')
+    } 
+    const hashedPassword = await bcrypt.hash(user.password, saltRounds)
 
-        const testExist = await User.find({ username: user.username });
-        if (testExist) {
-            throw new Error('User already exists')
-        }
-        
-        const hashedPassword = await bcrypt.hash(user.password, saltRounds)
-
-        return await User.create({username:user.username, password:hashedPassword});
-    }
-    catch(err){
-        return err
-    }
+    return await User.create({username:user.username, password:hashedPassword});
 }
 module.exports.register = register
