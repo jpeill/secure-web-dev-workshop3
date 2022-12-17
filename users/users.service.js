@@ -1,40 +1,40 @@
 const User = require('./users.model')
-const Useration = require('./users.model')
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-async function createUser(User){
-	return await Useration.create(User)
+async function createUser(user){
+	return await User.create(user)
 }
 module.exports.createUser = createUser
 
 async function getAllUser(){
-	return (await Useration.find())
+	return (await User.find())
 }
 module.exports.getAllUser = getAllUser
 
 async function getUserById(id){
-	return (await Useration.findById(id))
+	return (await User.findById(id))
 }
 module.exports.getUserById = getUserById
 
 async function updateUser(id,update){
-    return await Useration.findByIdAndUpdate(id,update)
+    return await User.findByIdAndUpdate(id,update)
 }
 module.exports.updateUser = updateUser
 
 async function deleteUser(id){
-	return await Useration.findByIdAndDelete(id)
+	return await User.findByIdAndDelete(id)
 }
 module.exports.deleteUser = deleteUser
 
 
 async function register(req,res){
     try{
-        const user = res.body
+        const user = req.body
 
         const testExist = await User.find({ username: user.username });
         if (testExist) {
-            throw new NotFoundError('User already exists')
+            throw new Error('User already exists')
         }
         
         const hashedPassword = await bcrypt.hash(user.password, saltRounds)
@@ -44,7 +44,5 @@ async function register(req,res){
     catch(err){
         return err
     }
-
-    
-
 }
+module.exports.register = register
