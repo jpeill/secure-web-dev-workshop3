@@ -1,0 +1,1 @@
+const Location = require('./users.model')
